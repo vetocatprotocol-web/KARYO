@@ -1,0 +1,2256 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KARYOGIT — Platform Open-Source Nasional Indonesia</title>
+<meta name="description" content="Agregator, inkubator, dan direktori open-source nasional untuk developer Indonesia. Temukan, bagikan, dan kembangkan karya teknologi lokal.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --merah: #DC143C;
+  --merah-gelap: #8B0000;
+  --merah-terang: #FF2D55;
+  --putih: #FAFAF8;
+  --krem: #F5F0E8;
+  --hitam: #0A0A0A;
+  --abu: #1A1A1A;
+  --abu-muda: #2A2A2A;
+  --teks-redup: #6B6B6B;
+  --emas: #D4AF37;
+  --hijau: #00C853;
+  --biru: #0066FF;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--hitam);
+  color: var(--putih);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--hitam); }
+::-webkit-scrollbar-thumb { background: var(--merah); border-radius: 2px; }
+
+/* ── NOISE TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 1rem 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(10,10,10,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(220,20,60,0.15);
+  transition: all 0.3s ease;
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+  color: var(--putih);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-logo span { color: var(--merah); }
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--merah); }
+
+.nav-cta {
+  background: var(--merah);
+  color: white !important;
+  padding: 0.5rem 1.25rem;
+  border-radius: 4px;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase;
+  transition: background 0.2s, transform 0.2s !important;
+}
+
+.nav-cta:hover {
+  background: var(--merah-terang) !important;
+  transform: translateY(-1px);
+}
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 8rem 4rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Grid Lines Background */
+#hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(220,20,60,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(220,20,60,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(60px); }
+}
+
+/* Red Glow */
+#hero::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(circle, rgba(220,20,60,0.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.hero-flag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--merah);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  opacity: 0;
+  animation: fadeUp 0.6s ease 0.2s forwards;
+}
+
+.hero-flag::before {
+  content: '';
+  display: inline-block;
+  width: 2rem;
+  height: 2px;
+  background: var(--merah);
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3.5rem, 8vw, 7.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.35s forwards;
+}
+
+.hero-title em {
+  font-style: normal;
+  color: var(--merah);
+  display: block;
+}
+
+.hero-sub {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.55);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.5s forwards;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.65s forwards;
+}
+
+.btn-primary {
+  background: var(--merah);
+  color: white;
+  text-decoration: none;
+  padding: 0.9rem 2rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.25s ease;
+  border: 2px solid transparent;
+}
+
+.btn-primary:hover {
+  background: transparent;
+  border-color: var(--merah);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(220,20,60,0.25);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  padding: 0.9rem 2rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: all 0.25s ease;
+}
+
+.btn-secondary:hover {
+  border-color: rgba(255,255,255,0.4);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Hero Stats */
+.hero-stats {
+  position: absolute;
+  bottom: 3rem;
+  right: 4rem;
+  display: flex;
+  gap: 3rem;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.8s forwards;
+}
+
+.stat-item { text-align: right; }
+
+.stat-number {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2.5rem;
+  color: var(--putih);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.stat-number span { color: var(--merah); }
+
+.stat-label {
+  font-size: 0.7rem;
+  color: var(--teks-redup);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+}
+
+/* Scroll indicator */
+.scroll-hint {
+  position: absolute;
+  bottom: 3rem;
+  left: 4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255,255,255,0.3);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 1s forwards;
+}
+
+.scroll-line {
+  width: 40px;
+  height: 1px;
+  background: rgba(255,255,255,0.2);
+  animation: scrollPulse 2s ease infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { width: 40px; opacity: 0.3; }
+  50% { width: 60px; opacity: 0.7; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── TICKER ── */
+.ticker-wrap {
+  background: var(--merah);
+  padding: 0.7rem 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ticker-track {
+  display: inline-block;
+  animation: ticker 30s linear infinite;
+}
+
+.ticker-track span {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: white;
+  padding: 0 3rem;
+}
+
+.ticker-track span::before {
+  content: '◆ ';
+  opacity: 0.6;
+}
+
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ── SEARCH BAR ── */
+.search-section {
+  padding: 4rem;
+  background: var(--abu);
+}
+
+.search-bar-wrap {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.search-label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--merah);
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.search-input-group {
+  display: flex;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.search-input-group:focus-within {
+  border-color: var(--merah);
+  box-shadow: 0 0 0 3px rgba(220,20,60,0.1);
+}
+
+.search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--putih);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 1rem 1.25rem;
+}
+
+.search-input::placeholder { color: rgba(255,255,255,0.3); }
+
+.search-btn {
+  background: var(--merah);
+  border: none;
+  color: white;
+  padding: 0 1.5rem;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  transition: background 0.2s;
+}
+
+.search-btn:hover { background: var(--merah-terang); }
+
+.search-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.tag-pill {
+  background: rgba(220,20,60,0.1);
+  color: var(--merah);
+  border: 1px solid rgba(220,20,60,0.25);
+  border-radius: 100px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tag-pill:hover {
+  background: var(--merah);
+  color: white;
+  border-color: var(--merah);
+}
+
+/* ── SECTION GENERAL ── */
+section {
+  padding: 5rem 4rem;
+}
+
+.section-header {
+  margin-bottom: 3rem;
+}
+
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--merah);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section-eyebrow::before {
+  content: '';
+  width: 2rem;
+  height: 1px;
+  background: var(--merah);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.section-title em {
+  font-style: normal;
+  color: var(--merah);
+}
+
+/* ── TRENDING PROYEK ── */
+#trending { background: var(--hitam); }
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.project-card {
+  background: var(--hitam);
+  padding: 1.75rem;
+  transition: background 0.25s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(220,20,60,0.06) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.project-card:hover {
+  background: rgba(220,20,60,0.04);
+}
+
+.project-card:hover::after { opacity: 1; }
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  background: rgba(220,20,60,0.12);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.card-badge {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 100px;
+}
+
+.badge-trending {
+  background: rgba(255,45,85,0.15);
+  color: var(--merah-terang);
+  border: 1px solid rgba(255,45,85,0.3);
+}
+
+.badge-new {
+  background: rgba(0,200,83,0.12);
+  color: var(--hijau);
+  border: 1px solid rgba(0,200,83,0.25);
+}
+
+.badge-featured {
+  background: rgba(212,175,55,0.12);
+  color: var(--emas);
+  border: 1px solid rgba(212,175,55,0.25);
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.card-desc {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+
+.card-tags {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+.card-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: rgba(220,20,60,0.8);
+  background: rgba(220,20,60,0.08);
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.3);
+  font-family: var(--font-mono);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding-top: 1rem;
+}
+
+.card-footer-stats {
+  display: flex;
+  gap: 1rem;
+}
+
+.card-stat { display: flex; align-items: center; gap: 0.3rem; }
+
+.card-action {
+  background: rgba(220,20,60,0.12);
+  color: var(--merah);
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.card-action:hover {
+  background: var(--merah);
+  color: white;
+}
+
+/* ── FITUR UTAMA ── */
+#fitur { background: var(--abu); }
+
+.features-bento {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: auto;
+  gap: 1rem;
+}
+
+.feat-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.feat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--merah);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.feat-card:hover {
+  border-color: rgba(220,20,60,0.25);
+  background: rgba(220,20,60,0.03);
+}
+
+.feat-card:hover::before { transform: scaleX(1); }
+
+.feat-card.col-6 { grid-column: span 6; }
+.feat-card.col-4 { grid-column: span 4; }
+.feat-card.col-8 { grid-column: span 8; }
+.feat-card.col-12 { grid-column: span 12; }
+.feat-card.col-3 { grid-column: span 3; }
+
+.feat-icon {
+  font-size: 2rem;
+  margin-bottom: 1.25rem;
+  display: block;
+}
+
+.feat-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.feat-desc {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.6;
+}
+
+.feat-card.highlight {
+  background: linear-gradient(135deg, rgba(220,20,60,0.08) 0%, rgba(10,10,10,0.8) 100%);
+  border-color: rgba(220,20,60,0.2);
+}
+
+.feat-number {
+  font-family: var(--font-mono);
+  font-size: 4rem;
+  font-weight: 700;
+  color: rgba(220,20,60,0.15);
+  position: absolute;
+  bottom: -0.5rem;
+  right: 1rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* ── PETA DEVELOPER ── */
+#peta { background: var(--hitam); }
+
+.map-container {
+  position: relative;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 2rem;
+}
+
+.indonesia-map {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  display: block;
+}
+
+.map-dot {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.map-dot circle {
+  animation: pulseDot 2s ease infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { r: 6; opacity: 0.8; }
+  50% { r: 9; opacity: 1; }
+}
+
+.map-tooltip {
+  position: absolute;
+  background: var(--abu);
+  border: 1px solid rgba(220,20,60,0.3);
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  pointer-events: none;
+  display: none;
+  z-index: 10;
+  min-width: 140px;
+}
+
+.map-cities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+.city-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 100px;
+  padding: 0.4rem 1rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.city-chip:hover {
+  border-color: var(--merah);
+  background: rgba(220,20,60,0.08);
+}
+
+.city-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--merah);
+}
+
+.city-count {
+  color: var(--teks-redup);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+}
+
+/* ── KARYORANK ── */
+#leaderboard { background: var(--abu); }
+
+.rank-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.rank-list { list-style: none; }
+
+.rank-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rank-item:hover { padding-left: 0.5rem; }
+.rank-item:last-child { border-bottom: none; }
+
+.rank-pos {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1.25rem;
+  width: 2.5rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.rank-pos.gold { color: var(--emas); }
+.rank-pos.silver { color: #C0C0C0; }
+.rank-pos.bronze { color: #CD7F32; }
+.rank-pos.other { color: rgba(255,255,255,0.2); }
+
+.rank-info { flex: 1; }
+
+.rank-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.2rem;
+}
+
+.rank-meta {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.4);
+  font-family: var(--font-mono);
+}
+
+.rank-score {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--merah);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ── KARYO BLOG ── */
+#blog { background: var(--hitam); }
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+.blog-featured {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+.blog-featured:hover { border-color: rgba(220,20,60,0.3); }
+
+.blog-image {
+  height: 240px;
+  background: linear-gradient(135deg, rgba(220,20,60,0.15) 0%, rgba(30,30,30,1) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.blog-content { padding: 1.5rem; }
+
+.blog-cat {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--merah);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.blog-title-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.blog-excerpt {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.blog-author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.4);
+}
+
+.author-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(220,20,60,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+}
+
+.blog-list { display: flex; flex-direction: column; gap: 1rem; }
+
+.blog-mini {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 6px;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex: 1;
+}
+
+.blog-mini:hover {
+  border-color: rgba(220,20,60,0.2);
+  background: rgba(220,20,60,0.03);
+}
+
+.blog-mini-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.blog-mini-meta {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.35);
+  font-family: var(--font-mono);
+}
+
+/* ── TAG CLOUD ── */
+#tags { background: var(--abu); }
+
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.cloud-tag {
+  display: inline-block;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px;
+  color: rgba(255,255,255,0.6);
+  font-family: var(--font-mono);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cloud-tag:hover {
+  background: rgba(220,20,60,0.1);
+  border-color: rgba(220,20,60,0.3);
+  color: var(--merah);
+}
+
+.cloud-tag.size-xl { font-size: 1.6rem; padding: 0.5rem 1.25rem; }
+.cloud-tag.size-lg { font-size: 1.2rem; padding: 0.4rem 1rem; }
+.cloud-tag.size-md { font-size: 0.95rem; padding: 0.35rem 0.8rem; }
+.cloud-tag.size-sm { font-size: 0.75rem; padding: 0.25rem 0.65rem; }
+.cloud-tag.size-xs { font-size: 0.65rem; padding: 0.2rem 0.5rem; }
+
+/* ── SHOWCASE MINGGU INI ── */
+#showcase { background: linear-gradient(180deg, var(--hitam) 0%, #0d0003 100%); }
+
+.showcase-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  background: rgba(220,20,60,0.04);
+  border: 1px solid rgba(220,20,60,0.15);
+  border-radius: 12px;
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.showcase-card::before {
+  content: 'KARYA MINGGU INI';
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: rgba(220,20,60,0.5);
+  border: 1px solid rgba(220,20,60,0.2);
+  padding: 0.2rem 0.6rem;
+  border-radius: 100px;
+}
+
+.showcase-preview {
+  background: var(--abu-muda);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.showcase-preview::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(220,20,60,0.1) 0%, transparent 60%);
+}
+
+.showcase-info .section-eyebrow { margin-bottom: 0.5rem; }
+
+.showcase-name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 2.5rem;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+
+.showcase-desc {
+  color: rgba(255,255,255,0.55);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.showcase-dev {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(255,255,255,0.03);
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.dev-avatar-lg {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(220,20,60,0.2);
+  border: 2px solid rgba(220,20,60,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.dev-name { font-family: var(--font-display); font-weight: 600; }
+.dev-city { font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+
+/* ── TESTIMONIAL ── */
+#testimonial { background: var(--abu); }
+
+.testi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.testi-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 1.75rem;
+  transition: all 0.25s;
+}
+
+.testi-card:hover {
+  border-color: rgba(220,20,60,0.2);
+  transform: translateY(-4px);
+}
+
+.testi-stars {
+  color: var(--emas);
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.1em;
+}
+
+.testi-text {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.7;
+  font-style: italic;
+  margin-bottom: 1.25rem;
+}
+
+.testi-author {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.testi-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(220,20,60,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.testi-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.testi-role {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.35);
+}
+
+/* ── CTA BOTTOM ── */
+#cta-bottom {
+  background: var(--hitam);
+  padding: 8rem 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+#cta-bottom::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 100%, rgba(220,20,60,0.15) 0%, transparent 60%);
+}
+
+.cta-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.cta-title em { font-style: normal; color: var(--merah); }
+
+.cta-sub {
+  color: rgba(255,255,255,0.5);
+  font-size: 1.05rem;
+  margin-bottom: 3rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: #050505;
+  padding: 4rem;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.footer-brand { max-width: 280px; }
+
+.footer-logo {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.footer-logo span { color: var(--merah); }
+
+.footer-tagline {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.social-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.social-btn:hover {
+  border-color: var(--merah);
+  background: rgba(220,20,60,0.1);
+}
+
+.footer-col h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  color: rgba(255,255,255,0.5);
+}
+
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+
+.footer-links a {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.4);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover { color: var(--merah); }
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.25);
+  font-family: var(--font-mono);
+}
+
+/* ── MITRA ── */
+#mitra { background: var(--abu); }
+
+.mitra-strip {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 2rem;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+}
+
+.mitra-item {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.mitra-item:hover {
+  border-color: rgba(220,20,60,0.2);
+  color: rgba(255,255,255,0.5);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+
+  #hero { padding: 7rem 1.5rem 4rem; }
+  .hero-stats { position: static; flex-direction: row; flex-wrap: wrap; gap: 1.5rem; margin-top: 3rem; }
+  .hero-stats .stat-item { text-align: left; }
+  .scroll-hint { display: none; }
+
+  section { padding: 3rem 1.5rem; }
+  .search-section { padding: 2rem 1.5rem; }
+
+  .features-bento .col-6,
+  .features-bento .col-4,
+  .features-bento .col-8,
+  .features-bento .col-3 { grid-column: span 12; }
+
+  .rank-grid,
+  .blog-grid,
+  .testi-grid,
+  .showcase-card { grid-template-columns: 1fr; }
+
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+
+  #cta-bottom { padding: 4rem 1.5rem; }
+  footer { padding: 3rem 1.5rem; }
+  .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+}
+
+/* Intersection observer animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: none;
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#"><span>🇮🇩</span> KARYO<span>GIT</span></a>
+  <ul class="nav-links">
+    <li><a href="#trending">Katalog</a></li>
+    <li><a href="#fitur">Fitur</a></li>
+    <li><a href="#peta">Developer</a></li>
+    <li><a href="#leaderboard">Ranking</a></li>
+    <li><a href="#blog">Blog</a></li>
+    <li><a class="nav-cta" href="#cta-bottom">Daftarkan Karya →</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-flag">🇮🇩 Platform Open-Source Nasional</div>
+  <h1 class="hero-title">
+    Satu Tempat<br>
+    <em>Semua Karya</em><br>
+    Indonesia
+  </h1>
+  <p class="hero-sub">
+    Temukan, bagikan, dan kembangkan proyek open-source Indonesia. 
+    Dari mahasiswa hingga profesional — semua punya tempat di sini.
+  </p>
+  <div class="hero-actions">
+    <a href="#trending" class="btn-primary">🔍 Jelajahi Proyek</a>
+    <a href="#cta-bottom" class="btn-secondary">✦ Daftarkan Karyamu</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-number" id="counter-projects">0<span>+</span></div>
+      <div class="stat-label">Proyek Terdaftar</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" id="counter-devs">0<span>+</span></div>
+      <div class="stat-label">Developer Aktif</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" id="counter-dl">0<span>rb+</span></div>
+      <div class="stat-label">Total Download</div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span class="scroll-line"></span>
+    Scroll untuk eksplorasi
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span>Proyek Baru Hari Ini: SisaDesaApp</span>
+    <span>Trending: EduNusantara v2.1</span>
+    <span>Developer Baru: 12 bergabung minggu ini</span>
+    <span>Tag Populer: #UMKM #SistemDesa #Edutech</span>
+    <span>Download Terbanyak: TaniCerdas — 4.200x</span>
+    <span>Karya Minggu Ini: BahasaNLP Indonesia</span>
+    <span>Proyek Baru Hari Ini: SisaDesaApp</span>
+    <span>Trending: EduNusantara v2.1</span>
+    <span>Developer Baru: 12 bergabung minggu ini</span>
+    <span>Tag Populer: #UMKM #SistemDesa #Edutech</span>
+    <span>Download Terbanyak: TaniCerdas — 4.200x</span>
+    <span>Karya Minggu Ini: BahasaNLP Indonesia</span>
+  </div>
+</div>
+
+<!-- SEARCH -->
+<div class="search-section">
+  <div class="search-bar-wrap">
+    <span class="search-label">🔎 Cari proyek open-source Indonesia</span>
+    <div class="search-input-group">
+      <input class="search-input" type="text" placeholder="Contoh: sistem manajemen desa, app pertanian, fintech...">
+      <button class="search-btn">CARI →</button>
+    </div>
+    <div class="search-tags">
+      <span class="tag-pill">#UMKM</span>
+      <span class="tag-pill">#SistemDesa</span>
+      <span class="tag-pill">#Edutech</span>
+      <span class="tag-pill">#BahasaDaerah</span>
+      <span class="tag-pill">#FinTech</span>
+      <span class="tag-pill">#HealthTech</span>
+      <span class="tag-pill">#GovTech</span>
+      <span class="tag-pill">#Pertanian</span>
+      <span class="tag-pill">#Maritim</span>
+    </div>
+  </div>
+</div>
+
+<!-- TRENDING PROYEK -->
+<section id="trending">
+  <div class="section-header reveal">
+    <div class="section-eyebrow">🔥 Trending</div>
+    <h2 class="section-title">Proyek Yang Sedang <em>Ramai</em></h2>
+  </div>
+
+  <div class="projects-grid reveal">
+    <!-- Card 1 -->
+    <div class="project-card">
+      <div class="card-top">
+        <div class="card-icon">🌾</div>
+        <span class="card-badge badge-trending">🔥 Trending</span>
+      </div>
+      <div class="card-title">TaniCerdas</div>
+      <div class="card-desc">Aplikasi manajemen pertanian berbasis AI untuk petani kecil Indonesia. Prediksi cuaca, harga pasar, dan jadwal tanam.</div>
+      <div class="card-tags">
+        <span class="card-tag">#Pertanian</span>
+        <span class="card-tag">#AI</span>
+        <span class="card-tag">#UMKM</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-footer-stats">
+          <span class="card-stat">⭐ 847</span>
+          <span class="card-stat">⬇ 4.2rb</span>
+          <span class="card-stat">🔀 63</span>
+        </div>
+        <a class="card-action" href="#">Lihat →</a>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="project-card">
+      <div class="card-top">
+        <div class="card-icon">🏫</div>
+        <span class="card-badge badge-featured">⭐ Unggulan</span>
+      </div>
+      <div class="card-title">EduNusantara</div>
+      <div class="card-desc">Platform e-learning open-source untuk sekolah terpencil dengan dukungan offline dan bahasa daerah.</div>
+      <div class="card-tags">
+        <span class="card-tag">#Edutech</span>
+        <span class="card-tag">#BahasaDaerah</span>
+        <span class="card-tag">#Offline</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-footer-stats">
+          <span class="card-stat">⭐ 1.2rb</span>
+          <span class="card-stat">⬇ 8.7rb</span>
+          <span class="card-stat">🔀 124</span>
+        </div>
+        <a class="card-action" href="#">Lihat →</a>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="project-card">
+      <div class="card-top">
+        <div class="card-icon">🏘️</div>
+        <span class="card-badge badge-new">✦ Baru</span>
+      </div>
+      <div class="card-title">SisaDesaApp</div>
+      <div class="card-desc">Sistem administrasi desa lengkap: kependudukan, surat menyurat, APBDes, dan laporan otomatis.</div>
+      <div class="card-tags">
+        <span class="card-tag">#SistemDesa</span>
+        <span class="card-tag">#GovTech</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-footer-stats">
+          <span class="card-stat">⭐ 312</span>
+          <span class="card-stat">⬇ 1.8rb</span>
+          <span class="card-stat">🔀 28</span>
+        </div>
+        <a class="card-action" href="#">Lihat →</a>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="project-card">
+      <div class="card-top">
+        <div class="card-icon">🧠</div>
+        <span class="card-badge badge-trending">🔥 Trending</span>
+      </div>
+      <div class="card-title">BahasaNLP</div>
+      <div class="card-desc">Library NLP bahasa Indonesia & daerah (Jawa, Sunda, Madura). Tokenizer, stemmer, dan sentiment analysis.</div>
+      <div class="card-tags">
+        <span class="card-tag">#BahasaDaerah</span>
+        <span class="card-tag">#NLP</span>
+        <span class="card-tag">#Python</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-footer-stats">
+          <span class="card-stat">⭐ 2.1rb</span>
+          <span class="card-stat">⬇ 12rb</span>
+          <span class="card-stat">🔀 187</span>
+        </div>
+        <a class="card-action" href="#">Lihat →</a>
+      </div>
+    </div>
+
+    <!-- Card 5 -->
+    <div class="project-card">
+      <div class="card-top">
+        <div class="card-icon">💊</div>
+        <span class="card-badge badge-new">✦ Baru</span>
+      </div>
+      <div class="card-title">SehatKu</div>
+      <div class="card-desc">Aplikasi rekam medis sederhana untuk puskesmas dan klinik kecil. Integrasi BPJS dan rujukan online.</div>
+      <div class="card-tags">
+        <span class="card-tag">#HealthTech</span>
+        <span class="card-tag">#BPJS</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-footer-stats">
+          <span class="card-stat">⭐ 156</span>
+          <span class="card-stat">⬇ 890</span>
+          <span class="card-stat">🔀 14</span>
+        </div>
+        <a class="card-action" href="#">Lihat →</a>
+      </div>
+    </div>
+
+    <!-- Card 6 -->
+    <div class="project-card">
+      <div class="card-top">
+        <div class="card-icon">💳</div>
+        <span class="card-badge badge-featured">⭐ Unggulan</span>
+      </div>
+      <div class="card-title">KasirUMKM</div>
+      <div class="card-desc">Point of sale open-source untuk warung dan UMKM. Laporan harian, stok, dan integrasi QRIS.</div>
+      <div class="card-tags">
+        <span class="card-tag">#UMKM</span>
+        <span class="card-tag">#FinTech</span>
+        <span class="card-tag">#QRIS</span>
+      </div>
+      <div class="card-footer">
+        <div class="card-footer-stats">
+          <span class="card-stat">⭐ 673</span>
+          <span class="card-stat">⬇ 3.4rb</span>
+          <span class="card-stat">🔀 52</span>
+        </div>
+        <a class="card-action" href="#">Lihat →</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:2.5rem;">
+    <a class="btn-secondary" href="#">Lihat Semua 400+ Proyek →</a>
+  </div>
+</section>
+
+<!-- FITUR UTAMA — BENTO -->
+<section id="fitur">
+  <div class="section-header reveal">
+    <div class="section-eyebrow">✦ Kenapa KARYOGIT</div>
+    <h2 class="section-title">Satu Platform,<br><em>Semua Kebutuhan</em></h2>
+  </div>
+
+  <div class="features-bento reveal">
+    <div class="feat-card col-6 highlight">
+      <span class="feat-icon">🧾</span>
+      <div class="feat-title">Upload Proyek Instan</div>
+      <div class="feat-desc">Isi form, upload file rilis — proyek langsung muncul di katalog. Sistem otomatis simpan ke Supabase & Wasabi S3.</div>
+      <div class="feat-number">01</div>
+    </div>
+    <div class="feat-card col-6">
+      <span class="feat-icon">🔎</span>
+      <div class="feat-title">Pencarian Berbasis Tag Lokal</div>
+      <div class="feat-desc">Filter dengan tag seperti #SistemDesa, #UMKM, #Edutech — konteks yang relevan untuk Indonesia.</div>
+      <div class="feat-number">02</div>
+    </div>
+    <div class="feat-card col-4">
+      <span class="feat-icon">🤝</span>
+      <div class="feat-title">Tombol Gotong Royong</div>
+      <div class="feat-desc">Setiap proyek punya panel kontribusi: bug report, PR, dokumentasi — langsung ke GitHub.</div>
+      <div class="feat-number">03</div>
+    </div>
+    <div class="feat-card col-4">
+      <span class="feat-icon">🪪</span>
+      <div class="feat-title">Badge Made in Indonesia</div>
+      <div class="feat-desc">Badge SVG dinamis yang bisa dipasang di README GitHub atau website manapun.</div>
+      <div class="feat-number">04</div>
+    </div>
+    <div class="feat-card col-4">
+      <span class="feat-icon">🔄</span>
+      <div class="feat-title">Auto-Sync GitHub Actions</div>
+      <div class="feat-desc">Nightly sync metadata dari GitHub. Statistik bintang, fork, dan rilis selalu up-to-date.</div>
+      <div class="feat-number">05</div>
+    </div>
+    <div class="feat-card col-8 highlight">
+      <span class="feat-icon">📊</span>
+      <div class="feat-title">Dashboard Developer</div>
+      <div class="feat-desc">Statistik download, view, dan pertumbuhan kontributor per proyek. Insight tag tren di ekosistem Indonesia — semua gratis, semua real-time.</div>
+      <div class="feat-number">06</div>
+    </div>
+    <div class="feat-card col-4">
+      <span class="feat-icon">🧑‍💻</span>
+      <div class="feat-title">KaryoDir</div>
+      <div class="feat-desc">Direktori developer Indonesia dengan status "Open to Collaborate" dan portfolio terintegrasi.</div>
+      <div class="feat-number">07</div>
+    </div>
+    <div class="feat-card col-3">
+      <span class="feat-icon">🏆</span>
+      <div class="feat-title">KaryoRank</div>
+      <div class="feat-desc">Leaderboard proyek dan developer terpopuler nasional.</div>
+      <div class="feat-number">08</div>
+    </div>
+    <div class="feat-card col-3">
+      <span class="feat-icon">📰</span>
+      <div class="feat-title">KaryoBlog</div>
+      <div class="feat-desc">Tulis tutorial, postmortem, atau opini — dikurasi tim KARYOGIT.</div>
+      <div class="feat-number">09</div>
+    </div>
+    <div class="feat-card col-3">
+      <span class="feat-icon">🔔</span>
+      <div class="feat-title">KaryoAlert</div>
+      <div class="feat-desc">Email digest mingguan & RSS Feed per tag favorit.</div>
+      <div class="feat-number">10</div>
+    </div>
+    <div class="feat-card col-3">
+      <span class="feat-icon">💰</span>
+      <div class="feat-title">Support Developer</div>
+      <div class="feat-desc">Integrasi Saweria & Trakteer — dukung developer lokal langsung dari halaman proyek.</div>
+      <div class="feat-number">11</div>
+    </div>
+  </div>
+</section>
+
+<!-- SHOWCASE MINGGU INI -->
+<section id="showcase">
+  <div class="section-header reveal">
+    <div class="section-eyebrow">⭐ Spotlight</div>
+    <h2 class="section-title">Karya <em>Minggu Ini</em></h2>
+  </div>
+
+  <div class="showcase-card reveal">
+    <div class="showcase-preview">🧠</div>
+    <div class="showcase-info">
+      <div class="section-eyebrow">Python · NLP · Open Source</div>
+      <div class="showcase-name">BahasaNLP<br>Indonesia</div>
+      <div class="showcase-desc">
+        Library NLP komprehensif untuk bahasa Indonesia dan 7 bahasa daerah. Dari tokenizer, stemmer, POS tagger, hingga sentiment analysis — semuanya dioptimalkan untuk konteks lokal.
+      </div>
+      <div class="showcase-dev">
+        <div class="dev-avatar-lg">👨‍💻</div>
+        <div>
+          <div class="dev-name">Rizky Firmansyah</div>
+          <div class="dev-city">📍 Bandung, Jawa Barat · Universitas Telkom</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <a class="btn-primary" href="#" style="font-size:0.8rem; padding:0.7rem 1.25rem;">⬇ Download</a>
+        <a class="btn-secondary" href="#" style="font-size:0.8rem; padding:0.7rem 1.25rem;">GitHub →</a>
+        <a class="btn-secondary" href="#" style="font-size:0.8rem; padding:0.7rem 1.25rem;">🤝 Kontribusi</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PETA DEVELOPER -->
+<section id="peta">
+  <div class="section-header reveal">
+    <div class="section-eyebrow">🗺️ KaryoDir</div>
+    <h2 class="section-title">Developer <em>Indonesia</em><br>Ada di Sini</h2>
+  </div>
+
+  <div class="map-container reveal">
+    <!-- Simplified SVG map of Indonesia -->
+    <svg class="indonesia-map" viewBox="0 0 900 350" xmlns="http://www.w3.org/2000/svg">
+      <!-- Simplified Indonesia outline -->
+      <defs>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Sumatera -->
+      <ellipse cx="155" cy="180" rx="100" ry="55" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="1" transform="rotate(-15 155 180)"/>
+
+      <!-- Jawa -->
+      <ellipse cx="370" cy="235" rx="130" ry="30" fill="rgba(220,20,60,0.08)" stroke="rgba(220,20,60,0.2)" stroke-width="1.5" transform="rotate(-5 370 235)"/>
+
+      <!-- Kalimantan -->
+      <ellipse cx="440" cy="145" rx="90" ry="80" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+      <!-- Sulawesi -->
+      <ellipse cx="590" cy="160" rx="45" ry="85" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1" transform="rotate(15 590 160)"/>
+
+      <!-- Papua -->
+      <ellipse cx="790" cy="185" rx="85" ry="60" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+      <!-- Bali -->
+      <circle cx="510" cy="238" r="10" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+
+      <!-- City Dots -->
+      <!-- Jakarta -->
+      <g class="map-dot" onclick="showCity('Jakarta')">
+        <circle cx="330" cy="228" r="8" fill="rgba(220,20,60,0.3)" stroke="#DC143C" stroke-width="1.5" filter="url(#glow)"/>
+        <circle cx="330" cy="228" r="3" fill="#DC143C"/>
+        <text x="330" y="218" text-anchor="middle" fill="rgba(255,255,255,0.7)" font-size="10" font-family="'Space Mono', monospace">Jakarta</text>
+        <text x="330" y="244" text-anchor="middle" fill="rgba(220,20,60,0.7)" font-size="8" font-family="'Space Mono', monospace">421 dev</text>
+      </g>
+
+      <!-- Bandung -->
+      <g class="map-dot">
+        <circle cx="355" cy="240" r="6" fill="rgba(220,20,60,0.25)" stroke="#DC143C" stroke-width="1"/>
+        <circle cx="355" cy="240" r="2.5" fill="#DC143C"/>
+        <text x="355" y="256" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9" font-family="'Space Mono', monospace">Bdg</text>
+      </g>
+
+      <!-- Surabaya -->
+      <g class="map-dot">
+        <circle cx="435" cy="235" r="7" fill="rgba(220,20,60,0.25)" stroke="#DC143C" stroke-width="1"/>
+        <circle cx="435" cy="235" r="2.5" fill="#DC143C"/>
+        <text x="435" y="224" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9" font-family="'Space Mono', monospace">Surabaya</text>
+        <text x="435" y="248" text-anchor="middle" fill="rgba(220,20,60,0.6)" font-size="8" font-family="'Space Mono', monospace">198 dev</text>
+      </g>
+
+      <!-- Yogyakarta -->
+      <g class="map-dot">
+        <circle cx="390" cy="243" r="5" fill="rgba(220,20,60,0.2)" stroke="#DC143C" stroke-width="1"/>
+        <circle cx="390" cy="243" r="2" fill="#DC143C"/>
+        <text x="390" y="260" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="8" font-family="'Space Mono', monospace">Jogja</text>
+      </g>
+
+      <!-- Medan -->
+      <g class="map-dot">
+        <circle cx="140" cy="155" r="6" fill="rgba(220,20,60,0.2)" stroke="#DC143C" stroke-width="1"/>
+        <circle cx="140" cy="155" r="2" fill="#DC143C"/>
+        <text x="140" y="145" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9" font-family="'Space Mono', monospace">Medan</text>
+        <text x="140" y="168" text-anchor="middle" fill="rgba(220,20,60,0.6)" font-size="8" font-family="'Space Mono', monospace">87 dev</text>
+      </g>
+
+      <!-- Makassar -->
+      <g class="map-dot">
+        <circle cx="580" cy="200" r="5" fill="rgba(220,20,60,0.2)" stroke="#DC143C" stroke-width="1"/>
+        <circle cx="580" cy="200" r="2" fill="#DC143C"/>
+        <text x="580" y="215" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="8" font-family="'Space Mono', monospace">Makassar</text>
+      </g>
+
+      <!-- Bali -->
+      <g class="map-dot">
+        <circle cx="510" cy="240" r="5" fill="rgba(220,20,60,0.2)" stroke="#DC143C" stroke-width="1"/>
+        <circle cx="510" cy="240" r="2" fill="#DC143C"/>
+        <text x="510" y="256" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="8" font-family="'Space Mono', monospace">Bali</text>
+      </g>
+
+      <!-- Palembang -->
+      <g class="map-dot">
+        <circle cx="215" cy="200" r="4" fill="rgba(220,20,60,0.18)" stroke="#DC143C" stroke-width="1"/>
+        <circle cx="215" cy="200" r="1.5" fill="#DC143C"/>
+      </g>
+
+      <!-- Semarang -->
+      <g class="map-dot">
+        <circle cx="405" cy="232" r="4" fill="rgba(220,20,60,0.18)" stroke="#DC143C" stroke-width="1"/>
+        <circle cx="405" cy="232" r="1.5" fill="#DC143C"/>
+      </g>
+    </svg>
+
+    <div class="map-cities">
+      <div class="city-chip"><span class="city-dot"></span>Jakarta <span class="city-count">421</span></div>
+      <div class="city-chip"><span class="city-dot"></span>Bandung <span class="city-count">198</span></div>
+      <div class="city-chip"><span class="city-dot"></span>Surabaya <span class="city-count">156</span></div>
+      <div class="city-chip"><span class="city-dot"></span>Yogyakarta <span class="city-count">134</span></div>
+      <div class="city-chip"><span class="city-dot"></span>Medan <span class="city-count">87</span></div>
+      <div class="city-chip"><span class="city-dot"></span>Makassar <span class="city-count">62</span></div>
+      <div class="city-chip"><span class="city-dot"></span>Bali <span class="city-count">58</span></div>
+      <div class="city-chip"><span class="city-dot"></span>Semarang <span class="city-count">45</span></div>
+      <div class="city-chip"><span class="city-dot"></span>Palembang <span class="city-count">38</span></div>
+      <div class="city-chip"><span class="city-dot"></span>+34 kota lainnya</div>
+    </div>
+  </div>
+</section>
+
+<!-- TAG CLOUD -->
+<section id="tags">
+  <div class="section-header reveal" style="text-align:center;">
+    <div class="section-eyebrow" style="justify-content:center;">🏷️ Ekosistem Tag</div>
+    <h2 class="section-title">Jelajahi Berdasarkan <em>Konteks Lokal</em></h2>
+  </div>
+
+  <div class="tag-cloud reveal">
+    <span class="cloud-tag size-xl">#UMKM</span>
+    <span class="cloud-tag size-lg">#Edutech</span>
+    <span class="cloud-tag size-xl">#SistemDesa</span>
+    <span class="cloud-tag size-md">#BahasaDaerah</span>
+    <span class="cloud-tag size-lg">#FinTech</span>
+    <span class="cloud-tag size-sm">#Maritim</span>
+    <span class="cloud-tag size-md">#GovTech</span>
+    <span class="cloud-tag size-xl">#Pertanian</span>
+    <span class="cloud-tag size-sm">#HealthTech</span>
+    <span class="cloud-tag size-lg">#AI</span>
+    <span class="cloud-tag size-xs">#IoT</span>
+    <span class="cloud-tag size-md">#MobileDev</span>
+    <span class="cloud-tag size-sm">#Budaya</span>
+    <span class="cloud-tag size-xs">#Pariwisata</span>
+    <span class="cloud-tag size-md">#NLP</span>
+    <span class="cloud-tag size-sm">#Blockchain</span>
+    <span class="cloud-tag size-xl">#OpenData</span>
+    <span class="cloud-tag size-xs">#Lingkungan</span>
+    <span class="cloud-tag size-sm">#Logistik</span>
+    <span class="cloud-tag size-lg">#WebDev</span>
+    <span class="cloud-tag size-xs">#Security</span>
+    <span class="cloud-tag size-md">#DataScience</span>
+    <span class="cloud-tag size-sm">#Game</span>
+    <span class="cloud-tag size-xs">#Perikanan</span>
+    <span class="cloud-tag size-md">#Transport</span>
+  </div>
+</section>
+
+<!-- KARYORANK -->
+<section id="leaderboard">
+  <div class="section-header reveal">
+    <div class="section-eyebrow">🏆 KaryoRank</div>
+    <h2 class="section-title">Terbaik <em>Bulan Ini</em></h2>
+  </div>
+
+  <div class="rank-grid reveal">
+    <div>
+      <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--teks-redup); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:1rem;">📦 Proyek Terpopuler</div>
+      <ul class="rank-list">
+        <li class="rank-item">
+          <div class="rank-pos gold">1</div>
+          <div class="rank-info">
+            <div class="rank-name">BahasaNLP</div>
+            <div class="rank-meta">NLP · Python · 187 kontributor</div>
+          </div>
+          <div class="rank-score">⬇ 12rb</div>
+        </li>
+        <li class="rank-item">
+          <div class="rank-pos silver">2</div>
+          <div class="rank-info">
+            <div class="rank-name">EduNusantara</div>
+            <div class="rank-meta">Edutech · React · 124 kontributor</div>
+          </div>
+          <div class="rank-score">⬇ 8.7rb</div>
+        </li>
+        <li class="rank-item">
+          <div class="rank-pos bronze">3</div>
+          <div class="rank-info">
+            <div class="rank-name">TaniCerdas</div>
+            <div class="rank-meta">Pertanian · Flutter · 63 kontributor</div>
+          </div>
+          <div class="rank-score">⬇ 4.2rb</div>
+        </li>
+        <li class="rank-item">
+          <div class="rank-pos other">4</div>
+          <div class="rank-info">
+            <div class="rank-name">KasirUMKM</div>
+            <div class="rank-meta">FinTech · Vue.js · 52 kontributor</div>
+          </div>
+          <div class="rank-score">⬇ 3.4rb</div>
+        </li>
+        <li class="rank-item">
+          <div class="rank-pos other">5</div>
+          <div class="rank-info">
+            <div class="rank-name">SisaDesaApp</div>
+            <div class="rank-meta">GovTech · Laravel · 28 kontributor</div>
+          </div>
+          <div class="rank-score">⬇ 1.8rb</div>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--teks-redup); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:1rem;">🚀 Rising Star</div>
+      <ul class="rank-list">
+        <li class="rank-item">
+          <div class="rank-pos" style="color:var(--merah);">↑1</div>
+          <div class="rank-info">
+            <div class="rank-name">NelayangPintar</div>
+            <div class="rank-meta">Maritim · React Native</div>
+          </div>
+          <div class="rank-score" style="color:var(--hijau);">+312%</div>
+        </li>
+        <li class="rank-item">
+          <div class="rank-pos" style="color:var(--merah);">↑2</div>
+          <div class="rank-info">
+            <div class="rank-name">PantauDesa</div>
+            <div class="rank-meta">GovTech · Node.js</div>
+          </div>
+          <div class="rank-score" style="color:var(--hijau);">+248%</div>
+        </li>
+        <li class="rank-item">
+          <div class="rank-pos" style="color:var(--merah);">↑3</div>
+          <div class="rank-info">
+            <div class="rank-name">BatikGen AI</div>
+            <div class="rank-meta">Budaya · Python · AI</div>
+          </div>
+          <div class="rank-score" style="color:var(--hijau);">+189%</div>
+        </li>
+        <li class="rank-item">
+          <div class="rank-pos" style="color:var(--merah);">↑4</div>
+          <div class="rank-info">
+            <div class="rank-name">SehatKu</div>
+            <div class="rank-meta">HealthTech · Laravel</div>
+          </div>
+          <div class="rank-score" style="color:var(--hijau);">+145%</div>
+        </li>
+        <li class="rank-item">
+          <div class="rank-pos" style="color:var(--merah);">↑5</div>
+          <div class="rank-info">
+            <div class="rank-name">AgroSense</div>
+            <div class="rank-meta">Pertanian · IoT · Arduino</div>
+          </div>
+          <div class="rank-score" style="color:var(--hijau);">+98%</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section id="blog">
+  <div class="section-header reveal">
+    <div class="section-eyebrow">📰 KaryoBlog</div>
+    <h2 class="section-title">Cerita dari <em>Komunitas</em></h2>
+  </div>
+
+  <div class="blog-grid reveal">
+    <div class="blog-featured">
+      <div class="blog-image">🧠</div>
+      <div class="blog-content">
+        <div class="blog-cat">Tutorial · NLP</div>
+        <div class="blog-title-text">Cara Membangun Tokenizer Bahasa Jawa dari Nol dengan Python</div>
+        <div class="blog-excerpt">Perjalanan 6 bulan membangun library NLP untuk bahasa Jawa — dari pengumpulan dataset, preprocessing, hingga publish ke PyPI.</div>
+        <div class="blog-author">
+          <div class="author-avatar">R</div>
+          <span>Rizky F. · Bandung · 12 Mei 2025</span>
+          <span>· ⭐ 284 upvote</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="blog-list">
+      <div class="blog-mini">
+        <div class="blog-cat" style="font-family:var(--font-mono); font-size:0.6rem; color:var(--merah); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Postmortem</div>
+        <div class="blog-mini-title">Mengapa Proyek Pertama Saya Gagal (dan 3 Pelajaran Penting)</div>
+        <div class="blog-mini-meta">Ahmad S. · 8 Mei 2025 · ⭐ 156</div>
+      </div>
+      <div class="blog-mini">
+        <div class="blog-cat" style="font-family:var(--font-mono); font-size:0.6rem; color:var(--merah); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Stack · Free</div>
+        <div class="blog-mini-title">Full-stack App Gratis: Supabase + Render + Wasabi S3</div>
+        <div class="blog-mini-meta">Dewi L. · 5 Mei 2025 · ⭐ 312</div>
+      </div>
+      <div class="blog-mini">
+        <div class="blog-cat" style="font-family:var(--font-mono); font-size:0.6rem; color:var(--merah); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem;">Opini</div>
+        <div class="blog-mini-title">Kenapa Kita Butuh Ekosistem Open-Source yang Lebih Indonesia</div>
+        <div class="blog-mini-meta">Budi H. · 1 Mei 2025 · ⭐ 448</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section id="testimonial">
+  <div class="section-header reveal" style="text-align:center;">
+    <div class="section-eyebrow" style="justify-content:center;">💬 Komunitas Berkata</div>
+    <h2 class="section-title">Suara <em>Developer</em> Indonesia</h2>
+  </div>
+
+  <div class="testi-grid reveal">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"KARYOGIT membuat proyek side project saya yang tadinya cuma nangkring di GitHub jadi bisa ditemukan ratusan orang. Download pertama dari orang yang tidak saya kenal — itu momen luar biasa."</div>
+      <div class="testi-author">
+        <div class="testi-avatar">🧑‍💻</div>
+        <div>
+          <div class="testi-name">Arif Pratama</div>
+          <div class="testi-role">Full-stack Developer · Yogyakarta</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"Sebagai mahasiswa, ini platform pertama yang bikin karya tugas akhir saya punya dampak nyata. Sudah ada 3 desa yang pakai sistem yang saya buat."</div>
+      <div class="testi-author">
+        <div class="testi-avatar">👩‍🎓</div>
+        <div>
+          <div class="testi-name">Sari Indah</div>
+          <div class="testi-role">Mahasiswi Sistem Informasi · UGM</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-text">"Tag #SistemDesa dan #UMKM membuat proyek saya langsung ditemukan audiens yang tepat. Dapat 8 kontributor baru dalam seminggu pertama."</div>
+      <div class="testi-author">
+        <div class="testi-avatar">👨‍💼</div>
+        <div>
+          <div class="testi-name">Faisal Rahman</div>
+          <div class="testi-role">Software Engineer · Surabaya</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MITRA -->
+<section id="mitra">
+  <div class="section-header reveal" style="text-align:center; margin-bottom:2rem;">
+    <div class="section-eyebrow" style="justify-content:center;">🤝 Ekosistem</div>
+    <h2 class="section-title" style="font-size:1.75rem;">Komunitas yang <em>Mendukung</em></h2>
+  </div>
+  <div class="mitra-strip reveal">
+    <div class="mitra-item">GDG Indonesia</div>
+    <div class="mitra-item">BukuOSS</div>
+    <div class="mitra-item">ML Indonesia</div>
+    <div class="mitra-item">React Indonesia</div>
+    <div class="mitra-item">Python Indonesia</div>
+    <div class="mitra-item">PHPID</div>
+    <div class="mitra-item">Komunitas Android</div>
+    <div class="mitra-item">Data Science ID</div>
+    <div class="mitra-item">DevC Indonesia</div>
+  </div>
+</section>
+
+<!-- CTA BOTTOM -->
+<section id="cta-bottom">
+  <h2 class="cta-title">
+    Karyamu <em>Layak</em><br>
+    Dikenal Dunia
+  </h2>
+  <p class="cta-sub">Bergabung dengan ribuan developer Indonesia. Daftarkan proyekmu dalam 5 menit. Gratis selamanya.</p>
+  <div class="cta-buttons">
+    <a class="btn-primary" href="#" style="font-size:1rem; padding:1rem 2.5rem;">🚀 Daftarkan Karyamu</a>
+    <a class="btn-secondary" href="#" style="font-size:1rem; padding:1rem 2.5rem;">⭐ Star di GitHub</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <span class="footer-logo">🇮🇩 KARYO<span>GIT</span></span>
+      <div class="footer-tagline">Platform agregator dan inkubator open-source nasional Indonesia. Dari developer, oleh developer, untuk ekosistem teknologi Indonesia.</div>
+      <div class="footer-socials">
+        <div class="social-btn" title="GitHub">🐙</div>
+        <div class="social-btn" title="Discord">💬</div>
+        <div class="social-btn" title="Telegram">✈️</div>
+        <div class="social-btn" title="Twitter">🐦</div>
+        <div class="social-btn" title="Instagram">📸</div>
+      </div>
+    </div>
+
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <ul class="footer-links">
+        <li><a href="#">Katalog Proyek</a></li>
+        <li><a href="#">KaryoDir</a></li>
+        <li><a href="#">KaryoRank</a></li>
+        <li><a href="#">KaryoBlog</a></li>
+        <li><a href="#">KaryoAlert</a></li>
+        <li><a href="#">Badge Generator</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Developer</h4>
+      <ul class="footer-links">
+        <li><a href="#">Daftarkan Proyek</a></li>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Dokumentasi API</a></li>
+        <li><a href="#">GitHub Actions</a></li>
+        <li><a href="#">Embed Widget</a></li>
+        <li><a href="#">RSS Feed</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Tentang</h4>
+      <ul class="footer-links">
+        <li><a href="#">Tentang Kami</a></li>
+        <li><a href="#">Roadmap</a></li>
+        <li><a href="#">Kontribusi</a></li>
+        <li><a href="#">Komunitas</a></li>
+        <li><a href="#">Kebijakan Privasi</a></li>
+        <li><a href="#">Lisensi MIT</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2025 KARYOGIT · MIT License · Open Source</span>
+    <span>🇮🇩 Dibuat dengan ❤️ di Indonesia</span>
+    <span>Stack: GitHub Pages · Render · Supabase · Wasabi S3</span>
+  </div>
+</footer>
+
+<script>
+// ── COUNTER ANIMATION ──
+function animateCounter(el, target, duration, suffix) {
+  let start = 0;
+  const step = target / (duration / 16);
+  const timer = setInterval(() => {
+    start += step;
+    if (start >= target) { start = target; clearInterval(timer); }
+    el.textContent = Math.floor(start) + suffix;
+  }, 16);
+}
+
+// Observe hero stats
+const heroObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      setTimeout(() => animateCounter(document.getElementById('counter-projects'), 427, 1500, '+'), 800);
+      setTimeout(() => animateCounter(document.getElementById('counter-devs'), 1284, 1500, '+'), 900);
+      setTimeout(() => animateCounter(document.getElementById('counter-dl'), 48, 1500, 'rb+'), 1000);
+      heroObserver.disconnect();
+    }
+  });
+}, { threshold: 0.5 });
+
+const heroEl = document.getElementById('hero');
+if (heroEl) heroObserver.observe(heroEl);
+
+// ── SCROLL REVEAL ──
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── NAV SCROLL EFFECT ──
+const nav = document.querySelector('nav');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 80) {
+    nav.style.background = 'rgba(5,5,5,0.95)';
+  } else {
+    nav.style.background = 'rgba(10,10,10,0.85)';
+  }
+});
+
+// ── TAG PILLS ACTIVE ──
+document.querySelectorAll('.tag-pill').forEach(pill => {
+  pill.addEventListener('click', function() {
+    document.querySelectorAll('.tag-pill').forEach(p => p.style.cssText = '');
+    this.style.background = 'var(--merah)';
+    this.style.color = 'white';
+    this.style.borderColor = 'var(--merah)';
+  });
+});
+
+// ── SEARCH ENTER KEY ──
+document.querySelector('.search-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    const query = e.target.value.trim();
+    if (query) {
+      document.querySelector('.search-btn').style.transform = 'scale(0.95)';
+      setTimeout(() => document.querySelector('.search-btn').style.transform = '', 150);
+    }
+  }
+});
+
+// ── SMOOTH TICKER PAUSE ON HOVER ──
+const ticker = document.querySelector('.ticker-track');
+const tickerWrap = document.querySelector('.ticker-wrap');
+tickerWrap.addEventListener('mouseenter', () => ticker.style.animationPlayState = 'paused');
+tickerWrap.addEventListener('mouseleave', () => ticker.style.animationPlayState = 'running');
+
+// ── PROJECT CARD HOVER ──
+document.querySelectorAll('.project-card').forEach(card => {
+  card.addEventListener('mouseenter', function() {
+    this.style.boxShadow = '0 20px 60px rgba(220,20,60,0.1)';
+  });
+  card.addEventListener('mouseleave', function() {
+    this.style.boxShadow = '';
+  });
+});
+</script>
+</body>
+</html>
