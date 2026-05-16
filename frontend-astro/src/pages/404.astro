@@ -1,0 +1,115 @@
+---
+// 404 Page
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Halaman Tidak Ditemukan">
+  <section class="error-page">
+    <div class="container">
+      <div class="error-content">
+        <h1>404</h1>
+        <h2>Halaman Tidak Ditemukan</h2>
+        <p>Maaf, halaman yang Anda cari tidak ada atau sudah dipindahkan.</p>
+        
+        <div class="error-actions">
+          <a href="/" class="btn btn-primary btn-lg">Kembali ke Beranda</a>
+          <a href="/katalog" class="btn btn-secondary btn-lg">Lihat Katalog</a>
+        </div>
+
+        <div class="suggestions">
+          <h3>Atau coba halaman lain:</h3>
+          <ul>
+            <li><a href="/">🏠 Beranda</a></li>
+            <li><a href="/katalog">📚 Katalog Proyek</a></li>
+            <li><a href="/direktori">👥 Direktori Developer</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .error-page {
+    padding: 6rem 0;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .error-content {
+    max-width: 600px;
+  }
+
+  h1 {
+    font-size: 5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  .error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .suggestions h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: #666;
+  }
+
+  .suggestions ul {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .suggestions a {
+    padding: 0.75rem 1.5rem;
+    background: var(--light-bg);
+    border-radius: 0.5rem;
+    transition: all 0.3s;
+  }
+
+  .suggestions a:hover {
+    background: var(--primary-color);
+    color: white;
+  }
+
+  @media (max-width: 768px) {
+    .error-page {
+      padding: 3rem 0;
+    }
+
+    h1 {
+      font-size: 3rem;
+    }
+
+    .error-actions {
+      flex-direction: column;
+    }
+
+    .btn {
+      width: 100%;
+    }
+  }
+</style>

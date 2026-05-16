@@ -1,0 +1,75 @@
+---
+// Developer Card Component
+export interface Props {
+  id: string;
+  name: string;
+  city: string;
+  avatar: string;
+  skills: string[];
+}
+
+const { id, name, city, avatar, skills } = Astro.props;
+---
+
+<div class="developer-card">
+  <div class="developer-avatar">{avatar}</div>
+  <h3>{name}</h3>
+  <p class="developer-city">📍 {city}</p>
+  <div class="developer-skills">
+    {skills.slice(0, 3).map(skill => (
+      <span class="tag">{skill}</span>
+    ))}
+  </div>
+  <div style="margin-top: 1rem;">
+    <a href={`/developer/${id}`} class="btn btn-sm btn-primary">Lihat Profil</a>
+  </div>
+</div>
+
+<style>
+  .developer-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    text-align: center;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .developer-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-color);
+    transform: translateY(-4px);
+  }
+
+  .developer-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--light-bg);
+    margin: 0 auto 1rem;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .developer-city {
+    font-size: 0.85rem;
+    color: #999;
+    margin-bottom: 0.5rem;
+  }
+
+  .developer-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+</style>

@@ -1,0 +1,548 @@
+---
+// Home Page
+import Layout from '../layouts/Layout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import DeveloperCard from '../components/DeveloperCard.astro';
+import { SAMPLE_PROJECTS, SAMPLE_DEVELOPERS, TAGS } from '../lib/api';
+
+const featuredProject = SAMPLE_PROJECTS[0];
+const trendingProjects = SAMPLE_PROJECTS.sort((a, b) => (b.downloads + b.stars * 2) - (a.downloads + a.stars * 2));
+---
+
+<Layout title="Home">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="particle-container" id="particles"></div>
+    <div class="hero-content">
+      <h2>Agregator · Inkubator · Direktori · Komunitas</h2>
+      <p class="hero-subtitle">Platform open-source nasional Indonesia — tempat di mana setiap developer dapat mempublikasikan, menemukan, dan mengembangkan karya secara terbuka.</p>
+      
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Cari proyek, developer, atau tag..." class="search-input">
+        <button class="btn-search">🔍</button>
+      </div>
+
+      <div class="hero-buttons">
+        <a href="/katalog" class="btn btn-lg btn-primary">Jelajahi Proyek</a>
+        <a href="/submit" class="btn btn-lg btn-secondary">Pamerkan Karya</a>
+      </div>
+
+      <!-- Live Statistics -->
+      <div class="stats-container">
+        <div class="stat-item">
+          <h3>156</h3>
+          <p>Proyek Terdaftar</p>
+        </div>
+        <div class="stat-item">
+          <h3>342</h3>
+          <p>Developer Bergabung</p>
+        </div>
+        <div class="stat-item">
+          <h3>18.5K</h3>
+          <p>Total Download</p>
+        </div>
+        <div class="stat-item">
+          <h3>32</h3>
+          <p>Kota Terwakili</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Project -->
+  <section class="featured">
+    <div class="container">
+      <h2>🏆 Karya Minggu Ini</h2>
+      <div class="featured-project">
+        <div class="featured-project-image">{featuredProject.icon}</div>
+        <div class="featured-project-content">
+          <h3>{featuredProject.name}</h3>
+          <p>{featuredProject.description}</p>
+          <div class="featured-project-tags">
+            {featuredProject.tags.map(tag => (
+              <span class="tag primary">{tag}</span>
+            ))}
+          </div>
+          <p style="font-size: 0.9rem; color: #999;">
+            👤 by <strong>{featuredProject.author}</strong> | 
+            ⬇️ {featuredProject.downloads} downloads | 
+            ⭐ {featuredProject.stars} stars
+          </p>
+          <a href={`/proyek/${featuredProject.slug}`} class="btn btn-primary">
+            Lihat Proyek →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trending Projects -->
+  <section class="trending" id="trending">
+    <div class="container">
+      <h2>🔥 Trending Sekarang</h2>
+      <div class="projects-grid">
+        {trendingProjects.map(project => (
+          <ProjectCard
+            id={project.id}
+            name={project.name}
+            slug={project.slug}
+            description={project.description}
+            icon={project.icon}
+            downloads={project.downloads}
+            stars={project.stars}
+            author={project.author}
+            tags={project.tags}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Tags -->
+  <section class="tags-section">
+    <div class="container">
+      <h2>🏷️ Kategori Populer</h2>
+      <div class="tags-cloud">
+        {TAGS.map(tag => (
+          <a href={`/katalog?tag=${encodeURIComponent(tag.name)}`} class="tag">
+            {tag.name} <small>({tag.count})</small>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Developers -->
+  <section class="developers">
+    <div class="container">
+      <h2>👥 Developer Indonesia</h2>
+      <p class="section-subtitle">Temukan developer terbaik dari berbagai kota di Indonesia</p>
+      <div class="developers-grid">
+        {SAMPLE_DEVELOPERS.map(dev => (
+          <DeveloperCard
+            id={dev.id}
+            name={dev.name}
+            city={dev.city}
+            avatar={dev.avatar}
+            skills={dev.skills}
+          />
+        ))}
+      </div>
+      <div style="text-align: center; margin-top: 2rem;">
+        <a href="/direktori" class="btn btn-primary">Lihat Direktori Lengkap →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta">
+    <div class="container">
+      <h2>Siap Berkontribusi?</h2>
+      <p>Jadilah bagian dari gerakan open-source Indonesia yang lebih besar</p>
+      <a href="/submit" class="btn btn-lg btn-primary">Mulai Sekarang</a>
+    </div>
+  </section>
+
+  <!-- Community -->
+  <section class="komunitas" id="komunitas">
+    <div class="container">
+      <h2>💬 Bergabunglah dengan Komunitas</h2>
+      <div class="community-links">
+        <a href="https://discord.gg/karyogit" class="community-btn" target="_blank">
+          <span>💜</span> Discord
+        </a>
+        <a href="https://t.me/karyogit" class="community-btn" target="_blank">
+          <span>📱</span> Telegram
+        </a>
+        <a href="https://twitter.com/karyogit_id" class="community-btn" target="_blank">
+          <span>🐦</span> Twitter/X
+        </a>
+        <a href="https://instagram.com/karyogit.id" class="community-btn" target="_blank">
+          <span>📸</span> Instagram
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /* Hero Section */
+  .hero {
+    background: linear-gradient(135deg, var(--secondary-color) 0%, #1a1a1a 100%);
+    color: white;
+    padding: 6rem 0;
+    position: relative;
+    overflow: hidden;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+  }
+
+  .particle-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.1;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .hero h2 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    font-weight: bold;
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.9;
+  }
+
+  .search-box {
+    display: flex;
+    margin: 2rem auto;
+    max-width: 500px;
+  }
+
+  .search-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 0.5rem 0 0 0.5rem;
+    font-size: 1rem;
+  }
+
+  .search-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.3);
+  }
+
+  .btn-search {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.75rem 1.25rem;
+    border: none;
+    border-radius: 0 0.5rem 0.5rem 0;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background 0.3s;
+  }
+
+  .btn-search:hover {
+    background: #B81030;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 2rem 0;
+  }
+
+  .stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+    margin-top: 4rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .stat-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .stat-item h3 {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-item p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+
+  /* Featured Project */
+  .featured {
+    padding: 4rem 0;
+    background: var(--light-bg);
+  }
+
+  .featured h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .featured-project {
+    background: white;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .featured-project-image {
+    height: 100%;
+    min-height: 300px;
+    background: var(--light-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+  }
+
+  .featured-project-content {
+    padding: 2rem;
+  }
+
+  .featured-project-content h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+  }
+
+  .featured-project-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Trending Projects */
+  .trending {
+    padding: 4rem 0;
+  }
+
+  .trending h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Tags */
+  .tags-section {
+    padding: 4rem 0;
+    background: var(--light-bg);
+  }
+
+  .tags-section h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .tags-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .tags-cloud .tag {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    background: white;
+    border: 1px solid var(--border-color);
+    display: inline-block;
+    transition: all 0.3s;
+  }
+
+  .tags-cloud .tag:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    transform: scale(1.1);
+  }
+
+  /* Developers */
+  .developers {
+    padding: 4rem 0;
+  }
+
+  .developers h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .section-subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 2rem;
+  }
+
+  .developers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  /* CTA */
+  .cta {
+    padding: 4rem 0;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #B81030 100%);
+    color: white;
+    text-align: center;
+    border-radius: 1rem;
+    margin: 2rem 0;
+  }
+
+  .cta h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .cta p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+
+  /* Community */
+  .komunitas {
+    padding: 4rem 0;
+    background: var(--light-bg);
+  }
+
+  .komunitas h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .community-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .community-btn {
+    padding: 1.5rem;
+    background: white;
+    border: 2px solid var(--border-color);
+    border-radius: 0.75rem;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .community-btn span {
+    font-size: 1.5rem;
+  }
+
+  .community-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    .hero h2 {
+      font-size: 2rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1rem;
+    }
+
+    .featured-project {
+      grid-template-columns: 1fr;
+    }
+
+    .featured-project-image {
+      order: -1;
+    }
+
+    .hero-buttons {
+      flex-direction: column;
+    }
+
+    .btn-lg {
+      width: 100%;
+    }
+
+    .stats-container {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .search-box {
+      flex-direction: column;
+    }
+
+    .search-input {
+      border-radius: 0.5rem 0.5rem 0 0;
+    }
+
+    .btn-search {
+      border-radius: 0 0 0.5rem 0.5rem;
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  // Search functionality
+  const searchInput = document.getElementById('searchInput');
+  const btnSearch = document.querySelector('.btn-search');
+
+  if (searchInput && btnSearch) {
+    btnSearch.addEventListener('click', () => {
+      const query = searchInput.value;
+      if (query.trim()) {
+        window.location.href = `/katalog?search=${encodeURIComponent(query)}`;
+      }
+    });
+
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const query = searchInput.value;
+        if (query.trim()) {
+          window.location.href = `/katalog?search=${encodeURIComponent(query)}`;
+        }
+      }
+    });
+  }
+</script>

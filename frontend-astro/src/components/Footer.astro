@@ -1,0 +1,90 @@
+---
+// Footer Component
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>KARYOGIT</h3>
+        <p>Platform agregator dan inkubator open-source nasional Indonesia</p>
+      </div>
+      <div class="footer-section">
+        <h4>Links</h4>
+        <ul>
+          <li><a href="/katalog">Katalog</a></li>
+          <li><a href="/direktori">Direktori</a></li>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/api">API</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Develop</h4>
+        <ul>
+          <li><a href="https://github.com/karyogit/karyogit" target="_blank">GitHub</a></li>
+          <li><a href="/docs/api">Dokumentasi API</a></li>
+          <li><a href="/contributing">Kontribusi</a></li>
+          <li><a href="/license">Lisensi</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <ul>
+          <li>Email: hello@karyogit.id</li>
+          <li>Twitter: @karyogit_id</li>
+          <li>Made with ❤️ for 🇮🇩</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024-2026 KARYOGIT. Licensed under MIT.</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--secondary-color);
+    color: white;
+    padding: 3rem 0 1rem;
+    margin-top: 4rem;
+  }
+
+  .footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .footer-section h3,
+  .footer-section h4 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+  }
+
+  .footer-section ul {
+    list-style: none;
+  }
+
+  .footer-section ul li {
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-section a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .footer-section a:hover {
+    color: var(--primary-color);
+  }
+
+  .footer-bottom {
+    border-top: 1px solid #333;
+    padding-top: 1.5rem;
+    text-align: center;
+    color: #999;
+  }
+</style>

@@ -1,0 +1,186 @@
+---
+// Developer Directory
+import Layout from '../../layouts/Layout.astro';
+import DeveloperCard from '../../components/DeveloperCard.astro';
+import { SAMPLE_DEVELOPERS } from '../../lib/api';
+
+const cityFilter = Astro.url.searchParams.get('city') || '';
+const skillFilter = Astro.url.searchParams.get('skill') || '';
+
+let filteredDevelopers = SAMPLE_DEVELOPERS;
+
+if (cityFilter) {
+  filteredDevelopers = filteredDevelopers.filter(d =>
+    d.city.toLowerCase().includes(cityFilter.toLowerCase())
+  );
+}
+
+if (skillFilter) {
+  filteredDevelopers = filteredDevelopers.filter(d =>
+    d.skills.some(s => s.toLowerCase().includes(skillFilter.toLowerCase()))
+  );
+}
+
+const cities = [...new Set(SAMPLE_DEVELOPERS.map(d => d.city))];
+const allSkills = [...new Set(SAMPLE_DEVELOPERS.flatMap(d => d.skills))];
+---
+
+<Layout title="Direktori Developer">
+  <section class="direktori-section">
+    <div class="container">
+      <h1>👥 Direktori Developer Indonesia</h1>
+      <p class="subtitle">Temukan developer terbaik dari seluruh Indonesia</p>
+
+      <!-- Filters -->
+      <div class="filters">
+        <div class="filter-group">
+          <h3>Kota</h3>
+          <select id="cityFilter">
+            <option value="">Semua Kota</option>
+            {cities.map(city => (
+              <option value={city} selected={city === cityFilter}>
+                {city}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <h3>Skill</h3>
+          <select id="skillFilter">
+            <option value="">Semua Skill</option>
+            {allSkills.map(skill => (
+              <option value={skill} selected={skill === skillFilter}>
+                {skill}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {(cityFilter || skillFilter) && (
+          <a href="/direktori" class="btn btn-sm" style="align-self: flex-end;">
+            ✕ Hapus Filter
+          </a>
+        )}
+      </div>
+
+      <!-- Results -->
+      {filteredDevelopers.length === 0 ? (
+        <div class="empty-state">
+          <p>😞 Tidak ada developer ditemukan dengan filter yang dipilih</p>
+          <a href="/direktori" class="btn btn-primary">Lihat Semua Developer</a>
+        </div>
+      ) : (
+        <div class="developers-grid">
+          {filteredDevelopers.map(dev => (
+            <DeveloperCard
+              id={dev.id}
+              name={dev.name}
+              city={dev.city}
+              avatar={dev.avatar}
+              skills={dev.skills}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .direktori-section {
+    padding: 4rem 0;
+    min-height: 70vh;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+  }
+
+  .filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    background: var(--light-bg);
+    padding: 2rem;
+    border-radius: 1rem;
+  }
+
+  .filter-group h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .filter-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .filter-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+  }
+
+  .developers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--light-bg);
+    border-radius: 1rem;
+  }
+
+  .empty-state p {
+    color: #666;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .filters {
+      grid-template-columns: 1fr;
+    }
+
+    .developers-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+
+<script>
+  const cityFilter = document.getElementById('cityFilter');
+  const skillFilter = document.getElementById('skillFilter');
+
+  if (cityFilter) {
+    cityFilter.addEventListener('change', (e) => {
+      const params = new URLSearchParams();
+      if (e.target.value) params.append('city', e.target.value);
+      if (skillFilter?.value) params.append('skill', skillFilter.value);
+      window.location.href = `/direktori?${params}`;
+    });
+  }
+
+  if (skillFilter) {
+    skillFilter.addEventListener('change', (e) => {
+      const params = new URLSearchParams();
+      if (cityFilter?.value) params.append('city', cityFilter.value);
+      if (e.target.value) params.append('skill', e.target.value);
+      window.location.href = `/direktori?${params}`;
+    });
+  }
+</script>

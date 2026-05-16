@@ -1,0 +1,112 @@
+---
+// Project Card Component
+export interface Props {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  icon: string;
+  downloads: number;
+  stars: number;
+  author: string;
+  tags: string[];
+}
+
+const { id, name, slug, description, icon, downloads, stars, author, tags } = Astro.props;
+---
+
+<div class="project-card">
+  <div class="project-card-header">
+    <span class="project-icon">{icon}</span>
+    <h3 class="project-card-title">{name}</h3>
+  </div>
+  <div class="project-card-body">
+    <p class="project-description">{description.substring(0, 80)}...</p>
+    <div class="project-meta">
+      <span>📥 {downloads}</span>
+      <span>⭐ {stars}</span>
+      <span>👤 {author}</span>
+    </div>
+  </div>
+  <div class="project-card-footer">
+    {tags.slice(0, 2).map(tag => (
+      <span class="tag">{tag}</span>
+    ))}
+  </div>
+  <div style="padding: 1rem 1.5rem;">
+    <a href={`/proyek/${slug}`} class="btn btn-primary btn-block">
+      Lihat Detail →
+    </a>
+  </div>
+</div>
+
+<style>
+  .project-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-4px);
+    border-color: var(--primary-color);
+  }
+
+  .project-card-header {
+    background: var(--light-bg);
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .project-icon {
+    font-size: 2.5rem;
+  }
+
+  .project-card-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--text-color);
+    margin: 0;
+  }
+
+  .project-card-body {
+    padding: 1.5rem;
+    flex-grow: 1;
+  }
+
+  .project-description {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .project-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: #999;
+    margin-bottom: 1rem;
+  }
+
+  .project-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .project-card-footer {
+    padding: 1rem 1.5rem 0;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+</style>

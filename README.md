@@ -526,12 +526,18 @@ karyogit/
 │       ├── deploy.yml          # Auto-deploy ke Render
 │       ├── sync-github.yml     # Sync metadata dari GitHub API
 │       └── notify-stale.yml    # Notifikasi proyek tidak aktif
-├── frontend/                   # GitHub Pages (Vanilla JS / Astro)
-│   ├── index.html
-│   ├── katalog.html
-│   ├── proyek/
-│   ├── developer/
-│   └── assets/
+├── frontend/                   # Vanilla JS static (deprecated)
+├── frontend-astro/             # ⭐ Astro Frontend (aktif)
+│   ├── src/
+│   │   ├── components/         # Reusable components
+│   │   ├── layouts/            # Page layouts
+│   │   ├── pages/              # Routes
+│   │   ├── styles/             # Global styles
+│   │   └── lib/                # Utilities
+│   ├── public/                 # Static assets
+│   ├── astro.config.mjs
+│   ├── package.json
+│   └── README.md
 ├── api/                        # Render — Node.js API
 │   ├── routes/
 │   │   ├── projects.js
@@ -547,10 +553,16 @@ karyogit/
 ├── supabase/
 │   ├── migrations/
 │   └── seed.sql
+├── scripts/
+│   ├── migrate.js
+│   ├── seed.js
+│   ├── sync-github.js
+│   └── check-stale.js
 ├── docs/
 │   ├── STACK.md
-│   ├── CONTRIBUTING.md
-│   └── API.md
+│   ├── API.md
+│   └── SETUP.md
+├── package.json
 └── README.md
 ```
 

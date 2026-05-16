@@ -1,0 +1,45 @@
+{
+  "name": "karyogit",
+  "version": "0.1.0",
+  "description": "Platform agregator dan inkubator open-source nasional Indonesia",
+  "type": "module",
+  "main": "api/server.js",
+  "scripts": {
+    "dev": "node api/server.js",
+    "dev:frontend": "cd frontend-astro && npm run dev",
+    "build": "cd frontend-astro && npm run build",
+    "build:api": "echo 'API ready for deployment'",
+    "db:migrate": "node scripts/migrate.js",
+    "db:seed": "node scripts/seed.js",
+    "sync:github": "node scripts/sync-github.js",
+    "check:stale": "node scripts/check-stale.js",
+    "test": "echo 'No tests yet'",
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "indonesia",
+    "opensource",
+    "platform",
+    "developer",
+    "community"
+  ],
+  "author": "KARYOGIT Contributors",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "@supabase/supabase-js": "^2.38.4",
+    "aws-sdk": "^2.1500.0",
+    "dotenv": "^16.3.1",
+    "express-rate-limit": "^7.1.0",
+    "axios": "^1.6.0",
+    "resend": "^2.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.50.0",
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

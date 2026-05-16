@@ -1,0 +1,75 @@
+---
+// Navigation Component
+---
+
+<nav class="navbar">
+  <div class="container">
+    <div class="navbar-brand">
+      <a href="/">
+        <h1>🇮🇩 KARYOGIT</h1>
+      </a>
+    </div>
+    <ul class="navbar-menu">
+      <li><a href="/#trending">Trending</a></li>
+      <li><a href="/katalog">Katalog</a></li>
+      <li><a href="/direktori">Developer</a></li>
+      <li><a href="/#komunitas">Komunitas</a></li>
+    </ul>
+    <button class="btn btn-primary" id="loginBtn">Login</button>
+  </div>
+</nav>
+
+<style>
+  .navbar {
+    background: var(--secondary-color);
+    color: white;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .navbar-brand h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .navbar-brand a {
+    color: white;
+  }
+
+  .navbar-menu {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+  }
+
+  .navbar-menu a {
+    color: white;
+    transition: color 0.3s;
+  }
+
+  .navbar-menu a:hover {
+    color: var(--primary-color);
+  }
+
+  @media (max-width: 768px) {
+    .navbar-menu {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  document.getElementById('loginBtn')?.addEventListener('click', () => {
+    alert('🔗 Login feature akan diaktifkan saat production');
+  });
+</script>

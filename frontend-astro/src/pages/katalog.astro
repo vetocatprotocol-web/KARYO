@@ -1,0 +1,238 @@
+---
+// Katalog Projects Page
+import Layout from '../../layouts/Layout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { SAMPLE_PROJECTS, TAGS } from '../../lib/api';
+
+const searchQuery = Astro.url.searchParams.get('search') || '';
+const selectedTag = Astro.url.searchParams.get('tag') || '';
+
+// Filter projects
+let filteredProjects = SAMPLE_PROJECTS;
+
+if (searchQuery) {
+  filteredProjects = filteredProjects.filter(p =>
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    p.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+}
+
+if (selectedTag) {
+  filteredProjects = filteredProjects.filter(p =>
+    p.tags.includes(selectedTag)
+  );
+}
+---
+
+<Layout title="Katalog Proyek">
+  <section class="katalog-section">
+    <div class="container">
+      <h1>📚 Katalog Proyek</h1>
+      <p class="subtitle">Jelajahi {SAMPLE_PROJECTS.length} proyek open-source dari Indonesia</p>
+
+      <!-- Filters -->
+      <div class="filters">
+        <div class="search-filter">
+          <input 
+            type="text" 
+            id="searchFilter" 
+            placeholder="Cari proyek..." 
+            value={searchQuery}
+            class="search-input"
+          >
+        </div>
+
+        <div class="tags-filter">
+          <h3>Filter berdasarkan Tag:</h3>
+          <div class="tag-list">
+            {TAGS.map(tag => (
+              <a 
+                href={`?tag=${encodeURIComponent(tag.name)}`}
+                class={`tag ${selectedTag === tag.name ? 'active' : ''}`}
+              >
+                {tag.name} ({tag.count})
+              </a>
+            ))}
+          </div>
+          {selectedTag && (
+            <a href="/katalog" class="btn btn-sm" style="margin-top: 1rem;">
+              ✕ Hapus Filter
+            </a>
+          )}
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="results">
+        {searchQuery && (
+          <p class="result-info">
+            Hasil pencarian untuk <strong>"{searchQuery}"</strong>: {filteredProjects.length} proyek ditemukan
+          </p>
+        )}
+
+        {selectedTag && (
+          <p class="result-info">
+            Proyek dengan tag <strong>{selectedTag}</strong>: {filteredProjects.length} proyek
+          </p>
+        )}
+
+        {filteredProjects.length === 0 ? (
+          <div class="empty-state">
+            <p>😞 Tidak ada proyek ditemukan</p>
+            <p>Coba ubah filter atau cari dengan kata kunci lain</p>
+            <a href="/katalog" class="btn btn-primary">Lihat Semua Proyek</a>
+          </div>
+        ) : (
+          <div class="projects-grid">
+            {filteredProjects.map(project => (
+              <ProjectCard
+                id={project.id}
+                name={project.name}
+                slug={project.slug}
+                description={project.description}
+                icon={project.icon}
+                downloads={project.downloads}
+                stars={project.stars}
+                author={project.author}
+                tags={project.tags}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .katalog-section {
+    padding: 4rem 0;
+    min-height: 70vh;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+  }
+
+  .filters {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .search-filter {
+    display: flex;
+  }
+
+  .search-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.1);
+  }
+
+  .tags-filter h3 {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    display: block;
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    text-align: left;
+    font-size: 0.9rem;
+  }
+
+  .tag:hover,
+  .tag.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+  }
+
+  .result-info {
+    text-align: center;
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--light-bg);
+    border-radius: 1rem;
+  }
+
+  .empty-state p {
+    color: #666;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state p:first-child {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .filters {
+      grid-template-columns: 1fr;
+    }
+
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const searchFilter = document.getElementById('searchFilter');
+  let searchTimeout;
+
+  if (searchFilter) {
+    searchFilter.addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        const query = e.target.value;
+        if (query.trim()) {
+          window.location.href = `/katalog?search=${encodeURIComponent(query)}`;
+        } else {
+          window.location.href = '/katalog';
+        }
+      }, 500);
+    });
+  }
+</script>

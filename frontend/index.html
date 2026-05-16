@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KARYOGIT - Platform agregator dan inkubator open-source nasional Indonesia">
+    <meta name="theme-color" content="#DC143C">
+    <title>🇮🇩 KARYOGIT - Agregator Open-Source Indonesia</title>
+    <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-brand">
+                <h1>🇮🇩 KARYOGIT</h1>
+            </div>
+            <ul class="navbar-menu">
+                <li><a href="#trending">Trending</a></li>
+                <li><a href="#katalog">Katalog</a></li>
+                <li><a href="#developers">Developer</a></li>
+                <li><a href="#komunitas">Komunitas</a></li>
+            </ul>
+            <button class="btn btn-primary" id="loginBtn">Login</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="particle-container" id="particles"></div>
+        <div class="hero-content">
+            <h2>Agregator · Inkubator · Direktori · Komunitas</h2>
+            <p class="hero-subtitle">Platform open-source nasional Indonesia — tempat di mana setiap developer dapat mempublikasikan, menemukan, dan mengembangkan karya secara terbuka.</p>
+            
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Cari proyek, developer, atau tag..." class="search-input">
+                <button class="btn btn-search">🔍</button>
+            </div>
+
+            <div class="hero-buttons">
+                <button class="btn btn-lg btn-primary" id="exploreBtn">Jelajahi Proyek</button>
+                <button class="btn btn-lg btn-secondary" id="submitBtn">Pamerkan Karya</button>
+            </div>
+
+            <!-- Live Statistics -->
+            <div class="stats-container">
+                <div class="stat-item">
+                    <h3 id="totalProjects">0</h3>
+                    <p>Proyek Terdaftar</p>
+                </div>
+                <div class="stat-item">
+                    <h3 id="totalDevelopers">0</h3>
+                    <p>Developer Bergabung</p>
+                </div>
+                <div class="stat-item">
+                    <h3 id="totalDownloads">0</h3>
+                    <p>Total Download</p>
+                </div>
+                <div class="stat-item">
+                    <h3 id="totalCities">0</h3>
+                    <p>Kota Terwakili</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Project -->
+    <section class="featured" id="featured">
+        <div class="container">
+            <h2>🏆 Karya Minggu Ini</h2>
+            <div class="featured-project" id="featuredProject">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Trending Projects -->
+    <section class="trending" id="trending">
+        <div class="container">
+            <h2>🔥 Trending Sekarang</h2>
+            <div class="projects-grid" id="trendingProjects">
+                <!-- Populated by JavaScript -->
+            </div>
+            <div class="loading" id="trendingLoading">Loading...</div>
+        </div>
+    </section>
+
+    <!-- Filter Tags -->
+    <section class="tags-section" id="tags-section">
+        <div class="container">
+            <h2>🏷️ Kategori Populer</h2>
+            <div class="tags-cloud" id="tagsCloud">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Developer Directory Preview -->
+    <section class="developers" id="developers">
+        <div class="container">
+            <h2>👥 Developer Indonesia</h2>
+            <p class="section-subtitle">Temukan developer terbaik dari berbagai kota di Indonesia</p>
+            <div class="developers-grid" id="developersGrid">
+                <!-- Populated by JavaScript -->
+            </div>
+            <button class="btn btn-primary" onclick="document.location.hash='#direktori'">Lihat Direktori Lengkap →</button>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section" id="map-section">
+        <div class="container">
+            <h2>🗺️ Peta Developer Indonesia</h2>
+            <div class="map-container">
+                <svg id="indonesiaMap" viewBox="0 0 900 600" class="indonesia-map">
+                    <!-- Simplified Indonesia map outline -->
+                    <path d="M 150 200 L 250 150 L 300 200 L 320 250 L 280 300 L 200 280 Z" fill="#f0f0f0" stroke="#333" stroke-width="2"/>
+                </svg>
+                <div class="map-legend">
+                    <p>Total Developer: <span id="mapTotalDevs">0</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <h2>💬 Kata Mereka</h2>
+            <div class="testimonials-carousel" id="testimonials-carousel">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta" id="cta">
+        <div class="container">
+            <h2>Siap Berkontribusi?</h2>
+            <p>Jadilah bagian dari gerakan open-source Indonesia yang lebih besar</p>
+            <button class="btn btn-lg btn-primary" id="startBtn">Mulai Sekarang</button>
+        </div>
+    </section>
+
+    <!-- Community Links -->
+    <section class="komunitas" id="komunitas">
+        <div class="container">
+            <h2>💬 Bergabunglah dengan Komunitas</h2>
+            <div class="community-links">
+                <a href="https://discord.gg/karyogit" class="community-btn" target="_blank">
+                    <span>💜</span> Discord
+                </a>
+                <a href="https://t.me/karyogit" class="community-btn" target="_blank">
+                    <span>📱</span> Telegram
+                </a>
+                <a href="https://twitter.com/karyogit_id" class="community-btn" target="_blank">
+                    <span>🐦</span> Twitter/X
+                </a>
+                <a href="https://instagram.com/karyogit.id" class="community-btn" target="_blank">
+                    <span>📸</span> Instagram
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>KARYOGIT</h3>
+                    <p>Platform agregator dan inkubator open-source nasional Indonesia</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Links</h4>
+                    <ul>
+                        <li><a href="#katalog">Katalog</a></li>
+                        <li><a href="#direktori">Direktori</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                        <li><a href="#api">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Develop</h4>
+                    <ul>
+                        <li><a href="https://github.com/karyogit/karyogit" target="_blank">GitHub</a></li>
+                        <li><a href="docs/API.md">Dokumentasi API</a></li>
+                        <li><a href="CONTRIBUTING.md">Kontribusi</a></li>
+                        <li><a href="LICENSE">Lisensi</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li>Email: hello@karyogit.id</li>
+                        <li>Twitter: @karyogit_id</li>
+                        <li>Made with ❤️ for 🇮🇩</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024-2026 KARYOGIT. Licensed under MIT.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/main.js"></script>
+</body>
+</html>
